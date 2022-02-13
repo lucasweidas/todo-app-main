@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Frontend Mentor | Todo app</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/index.js" defer></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <!-- Header-Container -->
+    <header id="header-container">
+      <div id="background-img"></div>
+      <h1>Todo</h1>
+      <button id="btn-theme-toggle">
+        <img src="images/icon-sun.svg" alt="" id="theme-icon" aria-hidden="true" />
+      </button>
+    </header>
+    <!-- Main Container -->
+    <main id="main-container">
+      <!-- Todo Form Container -->
+      <form id="todo-form">
+        <input type="checkbox" id="todo-form__cb" class="hero-cb" aria-label="Create a new todo marked as completed or not" />
+        <span class="hero-custom-cb" data-form-custom-cb></span>
+        <input type="text" id="todo-form__txt" placeholder="Create a new todo..." />
+      </form>
+      <!-- Todo Container -->
+      <div id="todo-container">
+        <!-- Todo List Container -->
+        <div id="todo-list">
+          <!-- <div class="hero-item-container" data-completed="false" data-active="true">
+            <input type="checkbox" id="item1" class="hero-cb" data-item-cb />
+            <label for="item1" class="hero-label" data-item-lbl>Jog around the park 3x</label>
+            <span class="hero-custom-cb"></span>
+            <button class="hero-btn-del"></button>
+          </div> -->
+        </div>
+        <!-- Todo Footer Container -->
+        <div id="todo-footer">
+          <p id="todo-items__left">items left</p>
+          <!-- Todo Filter Container -->
+          <div id="todo-filter">
+            <button id="btn-all" class="todo__button filter-on" data-filter-on="true">All</button>
+            <button id="btn-active" class="todo__button" data-filter-on="false">Active</button>
+            <button id="btn-completed" class="todo__button" data-filter-on="false">Completed</button>
+          </div>
+          <button id="btn-clear" class="todo__button">Clear Completed</button>
+        </div>
+      </div>
+      <p>Drag and drop to reorder list</p>
+    </main>
+    <!-- Footer Container -->
+    <footer>
+      <p class="attribution">
+        Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. Coded with <i class="fa-solid fa-heart"></i> by
+        <a href="https://github.com/LucasWeidas" target="_blank">Lucas Weidas</a>.
+      </p>
+    </footer>
+  </body>
+</html>
