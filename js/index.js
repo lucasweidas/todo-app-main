@@ -45,7 +45,7 @@
 
     reorderCheckBoxesId();
     setItemsLeftCounter();
-    updateShownTodoItems();
+    updateDisplayedItems();
   }
 
   // Add some class for all new elements created
@@ -59,8 +59,8 @@
   function checkOrUncheckCheckbox(event) {
     // This will only be executed if the user clicks on the form custom checkbox
     if (event.currentTarget.matches('[data-form-custom-cb]')) {
-      const status = formCheckBox.checked;
-      formCheckBox.checked = !status;
+      const status = formCheckbox.checked;
+      formCheckbox.checked = !status;
       return;
     }
 
@@ -81,7 +81,7 @@
       todoItemContainer.setAttribute('data-active', status);
     }
     setItemsLeftCounter();
-    updateShownTodoItems();
+    updateDisplayedItems();
   }
 
   // Every time a new todo item is created, it will reorder the ids for all checkboxes inside a "Todo item container"
@@ -128,13 +128,13 @@
   }
 
   // ADDS class for the currently selected filter button
-  function addClassFilterButtonOn(button) {
+  function addClassOnCurrentFilterButton(button) {
     button.classList.add('filter__button--on');
     button.setAttribute('data-filter-on', true);
   }
 
   // REMOVES class from the previously selected filter button
-  function removeClassFilterButtonOn() {
+  function removeClassOnPreviousFilterButton() {
     const previousFilterBtnOn = document.querySelector('[data-filter-on="true"]');
 
     previousFilterBtnOn.classList.remove('filter__button--on');
@@ -142,107 +142,113 @@
   }
 
   // ADD class that will hide all todo item containers passed as arguments
-  function addClassHideContainer(todoItems) {
+  function addClassHideInSomeTodoItems(todoItems) {
     todoItems.forEach(todoItem => {
       todoItem.classList.add('hero-item-container--hide');
     });
   }
 
   // REMOVE class that hides for all todo item containers passed as arguments
-  function removeClassHideContainer(todoItems) {
+  function removeClassHideOfAllTodoItems(todoItems) {
     todoItems.forEach(todoItem => {
       todoItem.classList.remove('hero-item-container--hide');
     });
   }
 
-  // Will REMOVE the class that hides for ALL todo item containers
-  function filterShowAllItems() {
-    const hasFilterOn = btnFilterAll.classList.contains('filter__button--on');
+  // "Filters" and shows all todo items on the screen
+  function displayAllTodoItems() {
+    const hasFilterOn = buttonFilterAll.classList.contains('filter__button--on');
     if (hasFilterOn) return;
 
-    removeClassFilterButtonOn();
-    addClassFilterButtonOn(btnFilterAll);
-    removeClassHideContainer(getAllTodoItemContainers());
+    removeClassOnPreviousFilterButton();
+    addClassOnCurrentFilterButton(buttonFilterAll);
+    removeClassHideOfAllTodoItems(getAllTodoItemContainers());
   }
 
-  // Will ADD the class that hides for all todo item containers marked as completed
-  function filterShowActiveItems() {
+  // Will filter all todo items NOT marked as completed and show only them on the screen
+  function displayOnlyActiveTodoItems() {
     const completedTodoItems = document.querySelectorAll('[data-active="false"]');
-    filterShowAllItems();
-    removeClassFilterButtonOn();
-    addClassFilterButtonOn(btnFilterActive);
-    addClassHideContainer(completedTodoItems);
+
+    removeClassOnPreviousFilterButton();
+    addClassOnCurrentFilterButton(buttonFilterActive);
+    removeClassHideOfAllTodoItems(getAllTodoItemContainers());
+    addClassHideInSomeTodoItems(completedTodoItems);
   }
 
-  // Will ADD the class that hides for all todo item containers NOT marked as completed
-  function filterShowCompletedItems() {
+  // Will filter all todo items MARKED as completed and show only them on the screen
+  function displayOnlyCompletedTodoItems() {
     const activeTodoItems = document.querySelectorAll('[data-completed="false"]');
-    filterShowAllItems();
-    removeClassFilterButtonOn();
-    addClassFilterButtonOn(btnFilterCompleted);
-    addClassHideContainer(activeTodoItems);
+
+    removeClassOnPreviousFilterButton();
+    addClassOnCurrentFilterButton(buttonFilterCompleted);
+    removeClassHideOfAllTodoItems(getAllTodoItemContainers());
+    addClassHideInSomeTodoItems(activeTodoItems);
   }
 
   // It will update the todo items shown if the user is already in one of these two filters and marks or unmarks any todo item
-  function updateShownTodoItems() {
+  function updateDisplayedItems() {
     const currentFilterBtnOn = document.querySelector('[data-filter-on="true"]');
 
-    if (currentFilterBtnOn.id === 'btn-active') return filterShowActiveItems();
-    if (currentFilterBtnOn.id === 'btn-completed') return filterShowCompletedItems();
+    if (currentFilterBtnOn.id === 'btn-active') {
+      return displayOnlyActiveTodoItems();
+    }
+    if (currentFilterBtnOn.id === 'btn-completed') {
+      return displayOnlyCompletedTodoItems();
+    }
   }
 
   // All main variables declarations
   const todoForm = document.querySelector('#todo-form');
-  const formCheckBox = document.querySelector('#todo-form__cb');
-  const formTxtInput = document.querySelector('#todo-form__txt');
-  const todoCheckBoxes = document.querySelectorAll('[data-item-cb]');
-  const customCheckBoxes = document.querySelectorAll('.hero-custom-cb');
-  const deleteButtons = document.querySelectorAll('.hero-btn-del');
+  const formCheckbox = document.querySelector('#todo-form__cb');
+  const formInputText = document.querySelector('#todo-form__txt');
+  const todoItemCheckboxes = document.querySelectorAll('[data-item-cb]');
+  const customCheckboxes = document.querySelectorAll('.hero-custom-cb');
+  const todoItemDeleteButtons = document.querySelectorAll('.hero-btn-del');
   const itemsLeftCounter = document.querySelector('#todo-items__left');
-  const btnFilterAll = document.querySelector('#btn-all');
-  const btnFilterActive = document.querySelector('#btn-active');
-  const btnFilterCompleted = document.querySelector('#btn-completed');
-  const clearCompleteBtn = document.querySelector('#btn-clear');
+  const buttonFilterAll = document.querySelector('#btn-all');
+  const buttonFilterActive = document.querySelector('#btn-active');
+  const buttonFilterCompleted = document.querySelector('#btn-completed');
+  const buttonClearCompleted = document.querySelector('#btn-clear');
 
   setItemsLeftCounter();
 
   // Event Listener for the Todo Form
   todoForm.addEventListener('submit', e => {
     e.preventDefault();
-    const txtInputValue = formTxtInput.value;
+    const inputTextValue = formInputText.value;
 
-    if (isInputEmpty(txtInputValue)) {
+    if (isInputEmpty(inputTextValue)) {
       return alert('Please enter a name');
     }
 
-    const checkBoxStatus = formCheckBox.checked;
-    createNewTodo(txtInputValue, checkBoxStatus);
+    const formCheckboxStatus = formCheckbox.checked;
+    createNewTodo(inputTextValue, formCheckboxStatus);
   });
 
   // Event Listener for all Todo Item Checkboxes
-  todoCheckBoxes.forEach(checkbox => {
+  todoItemCheckboxes.forEach(checkbox => {
     checkbox.addEventListener('click', checkOrUncheckCheckbox);
   });
 
   // Event Listener for all Custom Checkbox
-  customCheckBoxes.forEach(customCheckBox => {
-    customCheckBox.addEventListener('click', checkOrUncheckCheckbox);
+  customCheckboxes.forEach(customCheckbox => {
+    customCheckbox.addEventListener('click', checkOrUncheckCheckbox);
   });
 
   // Event Listener for all Todo Item Delete Button
-  deleteButtons.forEach(button => {
+  todoItemDeleteButtons.forEach(button => {
     button.addEventListener('click', removeTodoItem);
   });
 
   // Event Listener for the Filter All Button
-  btnFilterAll.addEventListener('click', filterShowAllItems);
+  buttonFilterAll.addEventListener('click', displayAllTodoItems);
 
   // Event Listener for the Filter Active Button
-  btnFilterActive.addEventListener('click', filterShowActiveItems);
+  buttonFilterActive.addEventListener('click', displayOnlyActiveTodoItems);
 
   // Event Listener for the Filter Completed Button
-  btnFilterCompleted.addEventListener('click', filterShowCompletedItems);
+  buttonFilterCompleted.addEventListener('click', displayOnlyCompletedTodoItems);
 
   // Event Listener for the Clear Completed Button
-  clearCompleteBtn.addEventListener('click', removeCompletedTodoItems);
+  buttonClearCompleted.addEventListener('click', removeCompletedTodoItems);
 })();
