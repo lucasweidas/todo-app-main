@@ -1,7 +1,7 @@
 (() => {
   // Check if the user submitted an empty value
-  function isInputEmpty(value) {
-    if (value.trim().length === 0) return true;
+  function isInputEmpty(inputValue) {
+    if (inputValue.trim().length === 0) return true;
     return false;
   }
 
@@ -27,17 +27,17 @@
       { element: deleteBtn, className: 'hero-btn-del' },
     ];
 
-    addNewClass(elements);
+    addClassToNewElements(elements);
     // Attributes set
     itemContainer.setAttribute('data-completed', status);
     itemContainer.setAttribute('data-active', !status);
     checkBox.checked = status;
     checkBox.type = 'checkbox';
     checkBox.setAttribute('data-item-cb', '');
-    checkBox.addEventListener('click', markCheckBox);
+    checkBox.addEventListener('click', checkOrUncheckCheckbox);
     label.innerText = value;
     label.setAttribute('data-item-lbl', '');
-    customCheckBox.addEventListener('click', markCheckBox);
+    customCheckBox.addEventListener('click', checkOrUncheckCheckbox);
     deleteBtn.addEventListener('click', removeTodoItem);
     // Putting all elements in their respective container
     itemContainer.append(checkBox, label, customCheckBox, deleteBtn);
@@ -49,14 +49,14 @@
   }
 
   // Add some class for all new elements created
-  function addNewClass(elements) {
-    elements.forEach(item => {
-      item.element.classList.add(item.className);
+  function addClassToNewElements(todoElements) {
+    todoElements.forEach(todoElement => {
+      todoElement.element.classList.add(todoElement.className);
     });
   }
 
-  // Will check or uncheck the checkbox
-  function markCheckBox(event) {
+  // Will check or uncheck the input checkbox and the custom checkbox
+  function checkOrUncheckCheckbox(event) {
     // This will only be executed if the user clicks on the form custom checkbox
     if (event.currentTarget.matches('[data-form-custom-cb]')) {
       const status = formCheckBox.checked;
@@ -97,15 +97,15 @@
     }
   }
 
-  // Will check how many todo items are NOT marked, and show them on the screen
+  // Will verify how many todo items are NOT check, and show them on the screen
   function setItemsLeftCounter() {
-    const todoItemsContainer = document.querySelectorAll('[data-active="true"]');
-    const itemsLeft = todoItemsContainer.length;
+    const todoItemContainers = document.querySelectorAll('[data-active="true"]');
+    const itemsLeft = todoItemContainers.length;
 
     itemsLeftCounter.innerText = `${itemsLeft} item${itemsLeft === 1 ? '' : 's'} left`;
   }
 
-  // Remove ONE todo item from the list
+  // Remove ONE todo item from the list when the user clicks the delete button inside the todo item container
   function removeTodoItem(event) {
     const todoList = getTodoList();
     const todoItemContainer = event.currentTarget.parentElement;
@@ -114,12 +114,12 @@
     setItemsLeftCounter();
   }
 
-  // Remove ALL todo items marked as completed from the list
+  // Remove ALL todo items check as completed from the list, when the user clicks the delete completed button
   function removeCompletedTodoItems() {
     const todoList = getTodoList();
-    const completedTodos = document.querySelectorAll('[data-completed="true"]');
+    const completedTodoItems = document.querySelectorAll('[data-completed="true"]');
 
-    completedTodos.forEach(todo => todoList.removeChild(todo));
+    completedTodoItems.forEach(todoItem => todoList.removeChild(todoItem));
   }
 
   // Will get ALL todo item containers created
@@ -128,67 +128,67 @@
   }
 
   // ADDS class for the currently selected filter button
-  function addClassFilterOn(button) {
-    button.classList.add('filter-on');
+  function addClassFilterButtonOn(button) {
+    button.classList.add('filter__button--on');
     button.setAttribute('data-filter-on', true);
   }
 
   // REMOVES class from the previously selected filter button
-  function removeClassFilterOn() {
-    const btnFilterOn = document.querySelector('[data-filter-on="true"]');
+  function removeClassFilterButtonOn() {
+    const previousFilterBtnOn = document.querySelector('[data-filter-on="true"]');
 
-    btnFilterOn.classList.remove('filter-on');
-    btnFilterOn.setAttribute('data-filter-on', false);
+    previousFilterBtnOn.classList.remove('filter__button--on');
+    previousFilterBtnOn.setAttribute('data-filter-on', false);
   }
 
-  // ADD class for all todo item containers passed as arguments
-  function addClassHideContainers(todoItems) {
+  // ADD class that will hide all todo item containers passed as arguments
+  function addClassHideContainer(todoItems) {
     todoItems.forEach(todoItem => {
-      todoItem.classList.add('hide-container');
+      todoItem.classList.add('hero-item-container--hide');
     });
   }
 
-  // REMOVE class for all todo item containers passed as arguments
-  function removeClassHideContainers(todoItems) {
+  // REMOVE class that hides for all todo item containers passed as arguments
+  function removeClassHideContainer(todoItems) {
     todoItems.forEach(todoItem => {
-      todoItem.classList.remove('hide-container');
+      todoItem.classList.remove('hero-item-container--hide');
     });
   }
 
   // Will REMOVE the class that hides for ALL todo item containers
   function filterShowAllItems() {
-    const hasFilterOn = btnFilterAll.classList.contains('filter-on');
+    const hasFilterOn = btnFilterAll.classList.contains('filter__button--on');
     if (hasFilterOn) return;
 
-    removeClassFilterOn();
-    addClassFilterOn(btnFilterAll);
-    removeClassHideContainers(getAllTodoItemContainers());
+    removeClassFilterButtonOn();
+    addClassFilterButtonOn(btnFilterAll);
+    removeClassHideContainer(getAllTodoItemContainers());
   }
 
   // Will ADD the class that hides for all todo item containers marked as completed
   function filterShowActiveItems() {
     const completedTodoItems = document.querySelectorAll('[data-active="false"]');
     filterShowAllItems();
-    removeClassFilterOn();
-    addClassFilterOn(btnFilterActive);
-    addClassHideContainers(completedTodoItems);
+    removeClassFilterButtonOn();
+    addClassFilterButtonOn(btnFilterActive);
+    addClassHideContainer(completedTodoItems);
   }
 
   // Will ADD the class that hides for all todo item containers NOT marked as completed
   function filterShowCompletedItems() {
     const activeTodoItems = document.querySelectorAll('[data-completed="false"]');
     filterShowAllItems();
-    removeClassFilterOn();
-    addClassFilterOn(btnFilterCompleted);
-    addClassHideContainers(activeTodoItems);
+    removeClassFilterButtonOn();
+    addClassFilterButtonOn(btnFilterCompleted);
+    addClassHideContainer(activeTodoItems);
   }
 
   // It will update the todo items shown if the user is already in one of these two filters and marks or unmarks any todo item
   function updateShownTodoItems() {
-    const btnFilterOn = document.querySelector('[data-filter-on="true"]');
+    const currentFilterBtnOn = document.querySelector('[data-filter-on="true"]');
 
-    if (btnFilterOn.id === 'btn-active') return filterShowActiveItems();
-    if (btnFilterOn.id === 'btn-completed') return filterShowCompletedItems();
+    if (currentFilterBtnOn.id === 'btn-active') return filterShowActiveItems();
+    if (currentFilterBtnOn.id === 'btn-completed') return filterShowCompletedItems();
   }
 
   // All main variables declarations
@@ -221,12 +221,12 @@
 
   // Event Listener for all Todo Item Checkboxes
   todoCheckBoxes.forEach(checkbox => {
-    checkbox.addEventListener('click', markCheckBox);
+    checkbox.addEventListener('click', checkOrUncheckCheckbox);
   });
 
   // Event Listener for all Custom Checkbox
   customCheckBoxes.forEach(customCheckBox => {
-    customCheckBox.addEventListener('click', markCheckBox);
+    customCheckBox.addEventListener('click', checkOrUncheckCheckbox);
   });
 
   // Event Listener for all Todo Item Delete Button

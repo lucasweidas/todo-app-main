@@ -72,7 +72,7 @@ button {
   position: relative;
 }
 
-.hero-item-container.hide-container {
+.hero-item-container.hero-item-container--hide {
   display: none;
 }
 
@@ -279,7 +279,7 @@ button {
   font-weight: 700;
 }
 
-#todo-filter > button.filter-on {
+#todo-filter > button.filter__button--on {
   color: var(--clr-l-g-blue-hover);
 }
 
