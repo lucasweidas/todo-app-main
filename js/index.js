@@ -197,6 +197,13 @@
     }
   }
 
+  // It will add or remove the "light-mode" class from the body tag and change the current theme icon displayed
+  function changeCurrentTheme() {
+    const body = document.body;
+    body.classList.toggle('light-mode');
+    themeIcons.forEach(icon => icon.classList.toggle('active-theme'));
+  }
+
   // All main variables declarations
   const todoForm = document.querySelector('#todo-form');
   const formCheckbox = document.querySelector('#todo-form__cb');
@@ -209,6 +216,8 @@
   const buttonFilterActive = document.querySelector('#btn-active');
   const buttonFilterCompleted = document.querySelector('#btn-completed');
   const buttonClearCompleted = document.querySelector('#btn-clear');
+  const buttonThemeToggle = document.querySelector('#btn-theme-toggle');
+  const themeIcons = document.querySelectorAll('.theme-icon');
 
   setItemsLeftCounter();
 
@@ -251,4 +260,6 @@
 
   // Event Listener for the Clear Completed Button
   buttonClearCompleted.addEventListener('click', removeCompletedTodoItems);
+
+  buttonThemeToggle.addEventListener('click', changeCurrentTheme);
 })();
