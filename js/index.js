@@ -37,10 +37,12 @@
     checkBox.addEventListener('click', checkOrUncheckCheckbox);
     label.innerText = value;
     label.setAttribute('data-item-lbl', '');
+    deleteBtn.ariaLabel = 'Click to delete todo';
     customCheckBox.addEventListener('click', checkOrUncheckCheckbox);
     deleteBtn.addEventListener('click', removeTodoItem);
     // Putting all elements in their respective container
-    itemContainer.append(checkBox, label, customCheckBox, deleteBtn);
+    // itemContainer.append(checkBox, label, customCheckBox, deleteBtn);
+    itemContainer.append(checkBox, label, deleteBtn);
     todoList.appendChild(itemContainer);
 
     reorderCheckBoxesId();
@@ -103,6 +105,7 @@
     const itemsLeft = todoItemContainers.length;
 
     itemsLeftCounter.innerText = `${itemsLeft} item${itemsLeft === 1 ? '' : 's'} left`;
+    itemsLeftCounter.ariaLabel = `${itemsLeft} item${itemsLeft === 1 ? '' : 's'} left`;
   }
 
   // Remove ONE todo item from the list when the user clicks the delete button inside the todo item container
@@ -200,8 +203,18 @@
   // It will add or remove the "light-mode" class from the body tag and change the current theme icon displayed
   function changeCurrentTheme() {
     const body = document.body;
-    body.classList.toggle('light-mode');
+    const backgroundImageContainer = document.querySelector('#background-img');
+    
+    body.classList.toggle('light-theme');
+    backgroundImageContainer.classList.toggle('light-theme');
     themeIcons.forEach(icon => icon.classList.toggle('active-theme'));
+
+    const isLightModeOn = body.classList.contains('light-theme');
+    if (isLightModeOn) {
+      buttonThemeToggle.ariaLabel = 'Click to change theme to dark mode';
+      return;
+    }
+    buttonThemeToggle.ariaLabel = 'Click to change theme to light mode';
   }
 
   // All main variables declarations

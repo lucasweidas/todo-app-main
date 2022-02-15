@@ -28,13 +28,14 @@
     <!-- Main Container -->
     <main id="main-container">
       <!-- Todo Form Container -->
-      <form id="todo-form">
+      <form id="todo-form" class="hero-shadow">
         <input type="checkbox" id="todo-form__cb" class="hero-cb" aria-label="Create a new todo marked as completed or not" />
-        <span class="hero-custom-cb" data-form-custom-cb></span>
+        <label for="todo-form__cb" class="hero-label" aria-hidden="true"></label>
+        <!-- <span class="hero-custom-cb" data-form-custom-cb></span> -->
         <input type="text" id="todo-form__txt" placeholder="Create a new todo..." />
       </form>
       <!-- Todo Container -->
-      <div id="todo-container">
+      <div id="todo-container" class="hero-shadow">
         <!-- Todo List Container -->
         <div id="todo-list">
           <!-- <div class="hero-item-container" data-completed="false" data-active="true">
@@ -46,14 +47,14 @@
         </div>
         <!-- Todo Footer Container -->
         <div id="todo-footer">
-          <p id="todo-items__left">items left</p>
+          <p id="todo-items__left" aria-label="items left" aria-relevant="additions text">items left</p>
           <!-- Todo Filter Container -->
           <div id="todo-filter">
-            <button id="btn-all" class="todo__button filter__button--on" data-filter-on="true">All</button>
-            <button id="btn-active" class="todo__button" data-filter-on="false">Active</button>
-            <button id="btn-completed" class="todo__button" data-filter-on="false">Completed</button>
+            <button id="btn-all" class="todo__button filter__button--on" data-filter-on="true" aria-label="Click to show all todo">All</button>
+            <button id="btn-active" class="todo__button" data-filter-on="false" aria-label="Click to show only actives todo">Active</button>
+            <button id="btn-completed" class="todo__button" data-filter-on="false" aria-label="Click to show only completed todo" >Completed</button>
           </div>
-          <button id="btn-clear" class="todo__button">Clear Completed</button>
+          <button id="btn-clear" class="todo__button" aria-label="Click to delete all completed todo">Clear Completed</button>
         </div>
       </div>
       <p>Drag and drop to reorder list</p>
