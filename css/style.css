@@ -35,9 +35,9 @@ body {
   --text-color: hsl(234, 39%, 85%);
   --buttons-hover: hsl(235, 32%, 92%);
   --buttons-text-color: hsl(234, 11%, 52%);
-  --todo-border-color: hsl(233, 14%, 35%);
-  --checkbox-border-color: hsl(237, 14%, 26%);
-  --todo-completed-color: hsl(234, 11%, 52%);
+  --todo-border-color: hsl(237, 14%, 26%);
+  --checkbox-border-color: var(--todo-border-color);
+  --todo-completed-color: hsl(233, 14%, 35%);
 
   display: flex;
   flex-direction: column;
@@ -71,6 +71,8 @@ button {
   font-size: var(--font-size);
 }
 
+/************************************************/
+/* Hero Classes */
 .hero-item-container {
   height: 52px;
   display: flex;
@@ -93,7 +95,6 @@ button {
 
 .hero-cb + .hero-label {
   width: 100%;
-  /* height: 29px; */
   height: auto;
   cursor: pointer;
   color: var(--text-color);
@@ -101,11 +102,11 @@ button {
   text-overflow: ellipsis;
   overflow-x: hidden;
   position: relative;
+  transition: color 200ms ease, text-decoration-line 200ms ease;
 }
 
 .hero-item-container > .hero-label {
   margin-right: 0.75rem;
-  /* padding: 0.563em 0 0.375em 2.75rem; */
   padding: 0.625rem 0 0.5rem 2.75rem;
 }
 
@@ -124,17 +125,6 @@ button {
   transition: opacity 200ms ease;
 }
 
-/* .hero-label:hover::before,
-.hero-cb:focus-visible + .hero-label::before {
-  background: linear-gradient(var(--todo-background-color), var(--todo-background-color)) content-box,
-    linear-gradient(145deg, var(--checkbox-bg-blue), var(--checkbox-bg-purple)) border-box;
-}
-
-.hero-cb:checked + .hero-label::before {
-  background: url('../images/icon-check.svg') center center / 12px no-repeat, linear-gradient(145deg, var(--checkbox-bg-blue), var(--checkbox-bg-purple)) content-box,
-    linear-gradient(145deg, var(--checkbox-bg-blue), var(--checkbox-bg-purple)) border-box;
-} */
-
 .hero-label::after {
   content: '';
   width: 22px;
@@ -151,14 +141,14 @@ button {
   transition: opacity 200ms ease;
 }
 
-.hero-label:hover::after,
-.hero-cb:focus-visible + .hero-label::after {
-  opacity: 1;
-}
-
 .hero-label:hover::before,
 .hero-cb:focus-visible + .hero-label::before {
   opacity: 0;
+}
+
+.hero-label:hover::after,
+.hero-cb:focus-visible + .hero-label::after {
+  opacity: 1;
 }
 
 .hero-cb:checked + .hero-label::before {
@@ -169,34 +159,6 @@ button {
   z-index: 1;
 }
 
-/* ******************* */
-
-/* .hero-custom-cb {
-  cursor: pointer;
-  width: 22px;
-  height: 22px;
-  background: linear-gradient(var(--todo-background-color), var(--todo-background-color)) padding-box,
-    linear-gradient(var(--checkbox-border-color), var(--checkbox-border-color)) border-box;
-  border: 2px solid transparent;
-  border-radius: 50%;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 17px;
-}
-
-.hero-custom-cb:hover,
-.hero-label:hover + .hero-custom-cb,
-.hero-cb:focus-visible ~ .hero-custom-cb {
-  background: linear-gradient(var(--todo-background-color), var(--todo-background-color)) padding-box,
-    linear-gradient(145deg, var(--checkbox-bg-blue), var(--checkbox-bg-purple)) border-box;
-}
-
-.hero-cb:checked ~ .hero-custom-cb {
-  background: url('../images/icon-check.svg') center / auto no-repeat, linear-gradient(145deg, var(--checkbox-bg-blue), var(--checkbox-bg-purple)) padding-box,
-    linear-gradient(145deg, var(--checkbox-bg-blue), var(--checkbox-bg-purple)) border-box;
-} */
-
 .hero-btn-del {
   display: inline-flex;
   opacity: 1;
@@ -205,31 +167,21 @@ button {
   padding: 0.25rem;
 }
 
-.hero-btn-del::before {
-  content: url('../images/icon-cross.svg');
-  width: 18px;
-  height: 18px;
-  transition: opacity 200ms ease;
-}
-
+.hero-btn-del::before,
 .hero-btn-del::after {
-  content: url('../images/icon-cross-hove.svg');
-  width: 18px;
-  height: 18px;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  opacity: 0;
+  width: 14px;
+  height: 14px;
+}
+
+.hero-btn-del::before {
+  content: '';
+  background: url('../images/icon-cross.svg') center / auto no-repeat;
   transition: opacity 200ms ease;
-}
-
-.hero-btn-del:hover::before,
-.hero-btn-del:focus-visible::before {
   opacity: 0;
 }
 
-.hero-btn-del:hover::after,
-.hero-btn-del:focus-visible::after {
+.hero-item-container:hover > .hero-btn-del::before,
+.hero-item-container:focus-within > .hero-btn-del::before {
   opacity: 1;
 }
 
@@ -263,7 +215,7 @@ body.light-theme .hero-shadow {
 }
 
 #background-img.light-theme {
-  background: url('../images/bg-mobile-light.jpg') top left / cover;
+  background-image: url('../images/bg-mobile-light.jpg');
 }
 
 #header-container > h1 {
@@ -291,7 +243,7 @@ body.light-theme .hero-shadow {
   transition: transform var(--theme-transition) ease;
 }
 
-.active-theme {
+.theme-icon.active-theme {
   transform: scale(1);
 }
 
@@ -328,11 +280,6 @@ body.light-theme .hero-shadow {
   width: 34px;
 }
 
-/* #todo-form__cb + .hero-custom-cb {
-  top: 50%;
-  transform: translateY(-50%);
-} */
-
 #todo-form__txt {
   width: 100%;
   height: 16px;
@@ -358,8 +305,8 @@ body.light-theme .hero-shadow {
 }
 
 .hero-item-container[data-completed='true'] > .hero-label {
-  color: var(--buttons-text-color);
-  text-decoration: line-through;
+  color: var(--todo-completed-color);
+  text-decoration-line: line-through;
 }
 
 /* Todo Footer Container */
@@ -431,6 +378,7 @@ footer {
 
 /************************************************/
 /* Media Queries */
+
 @media (max-width: 699px) {
   #todo-filter {
     box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.1);
@@ -438,6 +386,12 @@ footer {
 
   body.light-theme #todo-filter {
     box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.05);
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .hero-btn-del::before {
+    opacity: 1;
   }
 }
 
@@ -449,16 +403,10 @@ footer {
 
   .hero-item-container {
     height: 62px;
-    padding-inline: 1.5rem 1.125rem;
+    padding-inline: var(--padding-inline);
   }
 
-  /* .hero-cb + .hero-label {
-    height: 35px;
-    height: auto;
-  } */
-
   .hero-item-container > .hero-cb + .hero-label {
-    /* padding: 0.5em 0 0.375em 3rem; */
     padding: 0.625rem 0 0.5rem 3rem;
   }
 
@@ -468,16 +416,10 @@ footer {
     height: 26px;
   }
 
-  /* .hero-label::after {
-    width: 26px;
-    height: 26px;
-  } */
-
-  /* .hero-custom-cb {
-    width: 26px;
-    height: 26px;
-    left: 27px;
-  } */
+  .hero-btn-del::before {
+    width: 18px;
+    height: 18px;
+  }
 
   #background-img {
     height: 300px;
@@ -485,7 +427,7 @@ footer {
   }
 
   #background-img.light-theme {
-    background: url('../images/bg-desktop-light.jpg') center left / cover;
+    background-image: url('../images/bg-desktop-light.jpg');
   }
 
   #btn-theme-toggle {
