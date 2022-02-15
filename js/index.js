@@ -1,4 +1,21 @@
 (() => {
+  // All main variables declaration
+  const todoForm = document.querySelector('#todo-form');
+  const formCheckbox = document.querySelector('#todo-form__cb');
+  const formInputText = document.querySelector('#todo-form__txt');
+  const todoItemCheckboxes = document.querySelectorAll('[data-item-cb]');
+  const customCheckboxes = document.querySelectorAll('.hero-custom-cb');
+  const todoItemDeleteButtons = document.querySelectorAll('.hero-btn-del');
+  const itemsLeftCounter = document.querySelector('#todo-items__left');
+  const buttonFilterAll = document.querySelector('#btn-all');
+  const buttonFilterActive = document.querySelector('#btn-active');
+  const buttonFilterCompleted = document.querySelector('#btn-completed');
+  const buttonClearCompleted = document.querySelector('#btn-clear');
+  const buttonThemeToggle = document.querySelector('#btn-theme-toggle');
+  const themeIcons = document.querySelectorAll('.theme-icon');
+
+  setItemsLeftCounter();
+
   // Check if the user submitted an empty value
   function isInputEmpty(inputValue) {
     if (inputValue.trim().length === 0) return true;
@@ -216,23 +233,6 @@
     }
     buttonThemeToggle.ariaLabel = 'Click to change theme to light mode';
   }
-
-  // All main variables declarations
-  const todoForm = document.querySelector('#todo-form');
-  const formCheckbox = document.querySelector('#todo-form__cb');
-  const formInputText = document.querySelector('#todo-form__txt');
-  const todoItemCheckboxes = document.querySelectorAll('[data-item-cb]');
-  const customCheckboxes = document.querySelectorAll('.hero-custom-cb');
-  const todoItemDeleteButtons = document.querySelectorAll('.hero-btn-del');
-  const itemsLeftCounter = document.querySelector('#todo-items__left');
-  const buttonFilterAll = document.querySelector('#btn-all');
-  const buttonFilterActive = document.querySelector('#btn-active');
-  const buttonFilterCompleted = document.querySelector('#btn-completed');
-  const buttonClearCompleted = document.querySelector('#btn-clear');
-  const buttonThemeToggle = document.querySelector('#btn-theme-toggle');
-  const themeIcons = document.querySelectorAll('.theme-icon');
-
-  setItemsLeftCounter();
 
   // Event Listener for the Todo Form
   todoForm.addEventListener('submit', e => {

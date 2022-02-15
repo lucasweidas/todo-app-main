@@ -93,7 +93,8 @@ button {
 
 .hero-cb + .hero-label {
   width: 100%;
-  height: 29px;
+  /* height: 29px; */
+  height: auto;
   cursor: pointer;
   color: var(--text-color);
   white-space: nowrap;
@@ -102,16 +103,17 @@ button {
   position: relative;
 }
 
-.hero-item-container > .hero-cb + .hero-label {
+.hero-item-container > .hero-label {
   margin-right: 0.75rem;
-  padding: 0.563em 0 0.375em 2.75rem;
+  /* padding: 0.563em 0 0.375em 2.75rem; */
+  padding: 0.625rem 0 0.5rem 2.75rem;
 }
 
 .hero-label::before {
   content: '';
   width: 22px;
   height: 22px;
-  background: linear-gradient(var(--todo-background-color), var(--todo-background-color)) padding-box,
+  background: linear-gradient(var(--todo-background-color), var(--todo-background-color)) content-box,
     linear-gradient(var(--checkbox-border-color), var(--checkbox-border-color)) border-box;
   border: 2px solid transparent;
   border-radius: 50%;
@@ -119,18 +121,54 @@ button {
   top: 50%;
   transform: translateY(-50%);
   left: 4px;
+  transition: opacity 200ms ease;
 }
 
-.hero-label:hover::before,
+/* .hero-label:hover::before,
 .hero-cb:focus-visible + .hero-label::before {
-  background: linear-gradient(var(--todo-background-color), var(--todo-background-color)) padding-box,
+  background: linear-gradient(var(--todo-background-color), var(--todo-background-color)) content-box,
     linear-gradient(145deg, var(--checkbox-bg-blue), var(--checkbox-bg-purple)) border-box;
 }
 
 .hero-cb:checked + .hero-label::before {
-  background: url('../images/icon-check.svg') center / auto no-repeat, linear-gradient(145deg, var(--checkbox-bg-blue), var(--checkbox-bg-purple)) padding-box,
+  background: url('../images/icon-check.svg') center center / 12px no-repeat, linear-gradient(145deg, var(--checkbox-bg-blue), var(--checkbox-bg-purple)) content-box,
     linear-gradient(145deg, var(--checkbox-bg-blue), var(--checkbox-bg-purple)) border-box;
+} */
+
+.hero-label::after {
+  content: '';
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(var(--todo-background-color), var(--todo-background-color)) content-box,
+    linear-gradient(145deg, var(--checkbox-bg-blue), var(--checkbox-bg-purple)) border-box;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 4px;
+  opacity: 0;
+  transition: opacity 200ms ease;
 }
+
+.hero-label:hover::after,
+.hero-cb:focus-visible + .hero-label::after {
+  opacity: 1;
+}
+
+.hero-label:hover::before,
+.hero-cb:focus-visible + .hero-label::before {
+  opacity: 0;
+}
+
+.hero-cb:checked + .hero-label::before {
+  background: url('../images/icon-check.svg') center center / 12px no-repeat,
+    linear-gradient(145deg, var(--checkbox-bg-blue), var(--checkbox-bg-purple)) content-box,
+    linear-gradient(145deg, var(--checkbox-bg-blue), var(--checkbox-bg-purple)) border-box;
+  opacity: 1;
+  z-index: 1;
+}
+
 /* ******************* */
 
 /* .hero-custom-cb {
@@ -225,7 +263,7 @@ body.light-theme .hero-shadow {
 }
 
 #background-img.light-theme {
-  background-image: url('../images/bg-mobile-light.jpg');
+  background: url('../images/bg-mobile-light.jpg') top left / cover;
 }
 
 #header-container > h1 {
@@ -286,13 +324,14 @@ body.light-theme .hero-shadow {
 }
 
 #todo-form > .hero-label {
+  height: 29px;
   width: 34px;
 }
 
-#todo-form__cb + .hero-custom-cb {
+/* #todo-form__cb + .hero-custom-cb {
   top: 50%;
   transform: translateY(-50%);
-}
+} */
 
 #todo-form__txt {
   width: 100%;
@@ -413,18 +452,26 @@ footer {
     padding-inline: 1.5rem 1.125rem;
   }
 
-  .hero-cb + .hero-label {
+  /* .hero-cb + .hero-label {
     height: 35px;
-  }
+    height: auto;
+  } */
 
   .hero-item-container > .hero-cb + .hero-label {
-    padding: 0.5em 0 0.375em 3rem;
+    /* padding: 0.5em 0 0.375em 3rem; */
+    padding: 0.625rem 0 0.5rem 3rem;
   }
 
-  .hero-label::before {
+  .hero-label::before,
+  .hero-label::after {
     width: 26px;
     height: 26px;
   }
+
+  /* .hero-label::after {
+    width: 26px;
+    height: 26px;
+  } */
 
   /* .hero-custom-cb {
     width: 26px;
@@ -438,7 +485,7 @@ footer {
   }
 
   #background-img.light-theme {
-    background-image: url('../images/bg-desktop-light.jpg');
+    background: url('../images/bg-desktop-light.jpg') center left / cover;
   }
 
   #btn-theme-toggle {
@@ -453,6 +500,7 @@ footer {
   }
 
   #todo-form > .hero-label {
+    height: 35px;
     width: 38px;
   }
 
