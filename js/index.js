@@ -3,6 +3,7 @@
   const todoForm = document.querySelector('#todo-form');
   const formCheckbox = document.querySelector('#todo-form__cb');
   const formInputText = document.querySelector('#todo-form__txt');
+  const todoList = document.querySelector('#todo-list');
   const todoItemCheckboxes = document.querySelectorAll('[data-item-cb]');
   const todoItemDeleteButtons = document.querySelectorAll('.hero-btn-del');
   const itemsLeftCounter = document.querySelector('#todo-items__left');
@@ -21,21 +22,14 @@
     return false;
   }
 
-  // I think it's self-explanatory
-  function getTodoList() {
-    return document.querySelector('#todo-list');
-  }
-
   // Every time a new valid todo item is submitted, it will create new elements, configure and call up all necessary functions, and show it on the screen
   function createNewTodo(value, status) {
-    const todoList = getTodoList();
-
     // Creating all the new todo item elements
     const todoItemContainer = document.createElement('div');
     const checkbox = document.createElement('input');
     const label = document.createElement('label');
     const buttonDelete = document.createElement('button');
-    
+
     // Adding class to new elements
     todoItemContainer.classList.add('hero-item-container');
     checkbox.classList.add('hero-cb');
@@ -45,16 +39,23 @@
     // Setting up the new elements
     todoItemContainer.setAttribute('data-completed', status);
     todoItemContainer.setAttribute('data-active', !status);
+    todoItemContainer.draggable = true;
     checkbox.checked = status;
     checkbox.type = 'checkbox';
     checkbox.setAttribute('data-item-cb', '');
     label.innerText = value;
     label.setAttribute('data-item-lbl', '');
     buttonDelete.ariaLabel = 'Click to delete todo';
-    
+
     // Adding Event Listener to new elements
     checkbox.addEventListener('click', checkOrUncheckCheckbox);
     buttonDelete.addEventListener('click', removeTodoItem);
+    todoItemContainer.addEventListener('dragstart', () => {
+      todoItemContainer.setAttribute('data-dragging', '');
+    });
+    todoItemContainer.addEventListener('dragend', () => {
+      todoItemContainer.removeAttribute('data-dragging', '');
+    });
 
     // Putting all todo item elements in their respective container
     todoItemContainer.append(checkbox, label, buttonDelete);
@@ -100,7 +101,6 @@
 
   // Remove ONE todo item from the list when the user clicks the delete button inside the todo item container
   function removeTodoItem(event) {
-    const todoList = getTodoList();
     const todoItemContainer = event.currentTarget.parentElement;
 
     todoList.removeChild(todoItemContainer);
@@ -110,7 +110,6 @@
 
   // Remove ALL todo items check as completed from the list, when the user clicks the delete completed button
   function removeCompletedTodoItems() {
-    const todoList = getTodoList();
     const completedTodoItems = document.querySelectorAll('[data-completed="true"]');
 
     completedTodoItems.forEach(todoItem => todoList.removeChild(todoItem));
@@ -193,6 +192,25 @@
     buttonThemeToggle.ariaLabel = 'Click to change theme to light mode';
   }
 
+  // Every time an todo item is dragged by the user, this function will select all todo items except the current dragging todo item, and then calculate the correct position to place the todo item container
+  function getDropElementLocation(mousePositionY) {
+    const draggableTodoItems = [...todoList.querySelectorAll('.hero-item-container:not([data-dragging])')];
+
+    return draggableTodoItems.reduce(
+      (closestTodoItem, todoItem) => {
+        const boxBounding = todoItem.getBoundingClientRect();
+        const offset = mousePositionY - boxBounding.top - boxBounding.height / 2;
+
+        if (offset < 0 && offset > closestTodoItem.offset) {
+          return { offset: offset, element: todoItem };
+        } else {
+          return closestTodoItem;
+        }
+      },
+      { offset: Number.NEGATIVE_INFINITY }
+    ).element;
+  }
+
   // Event Listener for the Todo Form
   todoForm.addEventListener('submit', e => {
     e.preventDefault();
@@ -201,8 +219,8 @@
     if (isInputEmpty(inputTextValue)) {
       return todoForm.classList.add('invalid-value');
     }
-    todoForm.classList.remove('invalid-value');
 
+    todoForm.classList.remove('invalid-value');
     const formCheckboxStatus = formCheckbox.checked;
     createNewTodo(inputTextValue, formCheckboxStatus);
   });
@@ -229,5 +247,20 @@
   // Event Listener for the Clear Completed Button
   buttonClearCompleted.addEventListener('click', removeCompletedTodoItems);
 
+  // Event Listener for the Theme Toggle Button
   buttonThemeToggle.addEventListener('click', changeCurrentTheme);
+
+  // Event Listener for the Todo List (Drag and Drop)
+  todoList.addEventListener('dragover', e => {
+    e.preventDefault();
+
+    const dropElementLocation = getDropElementLocation(e.clientY);
+    const todoItemDraggable = document.querySelector('[data-dragging]');
+
+    if (dropElementLocation == null) {
+      todoList.appendChild(todoItemDraggable);
+    } else {
+      todoList.insertBefore(todoItemDraggable, dropElementLocation);
+    }
+  });
 })();
