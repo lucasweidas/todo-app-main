@@ -13,6 +13,7 @@
   const buttonClearCompleted = document.querySelector('#btn-clear');
   const buttonThemeToggle = document.querySelector('#btn-theme-toggle');
   const themeIcons = document.querySelectorAll('.theme-icon');
+  const dragInfo = { isMoving: false };
 
   setItemsLeftCounter();
 
@@ -54,8 +55,11 @@
       todoItemContainer.setAttribute('data-dragging', '');
     });
     todoItemContainer.addEventListener('dragend', () => {
-      todoItemContainer.removeAttribute('data-dragging', '');
+      todoItemContainer.removeAttribute('data-dragging');
     });
+    // todoItemContainer.addEventListener('touchstart', onTouchStart);
+    todoItemContainer.addEventListener('touchmove', onTouchMove);
+    todoItemContainer.addEventListener('touchend', onTouchEnd);
 
     // Putting all todo item elements in their respective container
     todoItemContainer.append(checkbox, label, buttonDelete);
@@ -193,13 +197,13 @@
   }
 
   // Every time an todo item is dragged by the user, this function will select all todo items except the current dragging todo item, and then calculate the correct position to place the todo item container
-  function getDropElementLocation(mousePositionY) {
+  function getDropElementLocation(positionY) {
     const draggableTodoItems = [...todoList.querySelectorAll('.hero-item-container:not([data-dragging])')];
 
     return draggableTodoItems.reduce(
       (closestTodoItem, todoItem) => {
         const boxBounding = todoItem.getBoundingClientRect();
-        const offset = mousePositionY - boxBounding.top - boxBounding.height / 2;
+        const offset = positionY - boxBounding.top - boxBounding.height / 2;
 
         if (offset < 0 && offset > closestTodoItem.offset) {
           return { offset: offset, element: todoItem };
@@ -209,6 +213,30 @@
       },
       { offset: Number.NEGATIVE_INFINITY }
     ).element;
+  }
+
+  function onTouchMove(event) {
+    event.preventDefault();
+    dragInfo.isMoving = true;
+    event.currentTarget.setAttribute('data-dragging', '');
+
+    const positionY = event.touches[0].clientY;
+    dragInfo.dropElementLocation = getDropElementLocation(positionY);
+  }
+
+  function onTouchEnd() {
+    if (dragInfo.isMoving) {
+      dragInfo.isMoving = false;
+      const todoItemDraggable = document.querySelector('[data-dragging]');
+
+      if (dragInfo.dropElementLocation == null) {
+        todoList.appendChild(todoItemDraggable);
+      } else {
+        todoList.insertBefore(todoItemDraggable, dragInfo.dropElementLocation);
+      }
+
+      todoItemDraggable.removeAttribute('data-dragging');
+    }
   }
 
   // Event Listener for the Todo Form
@@ -250,7 +278,7 @@
   // Event Listener for the Theme Toggle Button
   buttonThemeToggle.addEventListener('click', changeCurrentTheme);
 
-  // Event Listener for the Todo List (Drag and Drop)
+  // Event Listener for the Todo List (Drag and Drop) with MOUSE
   todoList.addEventListener('dragover', e => {
     e.preventDefault();
 
