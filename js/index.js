@@ -13,8 +13,11 @@
   const buttonClearCompleted = document.querySelector('#btn-clear');
   const buttonThemeToggle = document.querySelector('#btn-theme-toggle');
   const themeIcons = document.querySelectorAll('.theme-icon');
-
-  new Sortable(todoList, {
+  const buttonLockUnlock = document.querySelector('#btn__lock-unlock');
+  // Creating an object of the "Sortable" Framework, which will take care of the drag and drop functionality
+  const sortable = new Sortable(todoList, {
+    delay: 80,
+    delayOnTouchOnly: true,
     animation: 200,
     ghostClass: 'blue-background-class',
     dragClass: 'sortable-drag',
@@ -122,7 +125,8 @@
     previousTodoItemsFiltered.forEach(todoItem => {
       todoItem.classList.remove('hero-item-container--hide');
     });
-    // If the parameter value is "falsy" (!= null), this will be executed
+
+    // If the parameter value is "truthy", this will be executed
     if (currentTodoItemsFiltered) {
       currentTodoItemsFiltered.forEach(todoItem => {
         todoItem.classList.add('hero-item-container--hide');
@@ -191,19 +195,33 @@
     buttonThemeToggle.ariaLabel = 'Click to change theme to light mode';
   }
 
-  // Every time an todo item is dragged by the user, this function will select all todo items except the current dragging todo item, and then calculate the correct position to place the todo item container
+  // This will lock or unclock the drag and drop function for the user. It is most useful for mobile users
+  function lockUnclockDragAndDrop() {
+    const state = sortable.option('disabled'); // get the current boolean value
+
+    sortable.option('disabled', !state); // set the new boolean value
+    buttonLockUnlock.classList.toggle('lock-drag-drop');
+
+    if (state) {
+      buttonLockUnlock.ariaLabel = 'Click to disable the drag and drop function';
+      buttonLockUnlock.title = 'disable drag and drop';
+      return;
+    }
+    buttonLockUnlock.ariaLabel = 'Click to enable the drag and drop function';
+    buttonLockUnlock.title = 'enable drag and drop';
+  }
 
   // Event Listener for the Todo Form
-  todoForm.addEventListener('submit', e => {
-    e.preventDefault();
+  todoForm.addEventListener('submit', event => {
+    event.preventDefault();
     const inputTextValue = formInputText.value;
 
     if (isInputEmpty(inputTextValue)) {
       return todoForm.classList.add('invalid-value');
     }
 
-    todoForm.classList.remove('invalid-value');
     const formCheckboxStatus = formCheckbox.checked;
+    todoForm.classList.remove('invalid-value');
     createNewTodo(inputTextValue, formCheckboxStatus);
   });
 
@@ -231,4 +249,7 @@
 
   // Event Listener for the Theme Toggle Button
   buttonThemeToggle.addEventListener('click', changeCurrentTheme);
+
+  // Event Listener for the Lock Drag and Drop Button
+  buttonLockUnlock.addEventListener('click', lockUnclockDragAndDrop);
 })();

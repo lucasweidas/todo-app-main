@@ -192,7 +192,7 @@ button {
 }
 
 body.light-theme .hero-shadow {
-  box-shadow: 0 20px 20px 5px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 20px 20px 5px rgba(0, 0, 0, 0.06);
 }
 
 /************************************************/
@@ -322,6 +322,32 @@ body.light-theme .hero-shadow {
   background-color: var(--todo-background-color);
   border-radius: var(--border-r);
   margin-bottom: 110px;
+  position: relative;
+}
+
+#btn__lock-unlock {
+  display: flex;
+  bottom: 5%;
+  right: 0.5rem;
+  position: fixed;
+  font-size: 1.125rem;
+}
+
+#btn__lock-unlock .fa-lock {
+  display: none;
+  color: var(--checkbox-bg-purple);
+}
+
+#btn__lock-unlock .fa-unlock {
+  color: var(--clr-bright-blue);
+}
+
+#btn__lock-unlock.lock-drag-drop .fa-lock {
+  display: block;
+}
+
+#btn__lock-unlock.lock-drag-drop .fa-unlock {
+  display: none;
 }
 
 .hero-item-container[data-completed='true'] > .hero-label {
@@ -330,7 +356,7 @@ body.light-theme .hero-shadow {
 }
 
 .blue-background-class {
-  background-color: var(--body-background-color);
+  background-color: var(--checkbox-border-color);
 }
 
 .sortable-drag {
@@ -386,6 +412,7 @@ footer {
   font-size: var(--font-fixed);
   text-align: center;
   line-height: 1.8em;
+  padding-inline: 1em;
   margin-top: 3rem;
 }
 
