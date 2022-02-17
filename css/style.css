@@ -329,6 +329,14 @@ body.light-theme .hero-shadow {
   text-decoration-line: line-through;
 }
 
+.blue-background-class {
+  background-color: var(--body-background-color);
+}
+
+.sortable-drag {
+  opacity: 0;
+}
+
 /* Todo Footer Container */
 #todo-footer {
   height: 50px;

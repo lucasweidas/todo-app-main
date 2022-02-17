@@ -13,7 +13,12 @@
   const buttonClearCompleted = document.querySelector('#btn-clear');
   const buttonThemeToggle = document.querySelector('#btn-theme-toggle');
   const themeIcons = document.querySelectorAll('.theme-icon');
-  const dragInfo = { isMoving: false };
+
+  new Sortable(todoList, {
+    animation: 200,
+    ghostClass: 'blue-background-class',
+    dragClass: 'sortable-drag',
+  });
 
   setItemsLeftCounter();
 
@@ -40,7 +45,6 @@
     // Setting up the new elements
     todoItemContainer.setAttribute('data-completed', status);
     todoItemContainer.setAttribute('data-active', !status);
-    todoItemContainer.draggable = true;
     checkbox.checked = status;
     checkbox.type = 'checkbox';
     checkbox.setAttribute('data-item-cb', '');
@@ -51,15 +55,6 @@
     // Adding Event Listener to new elements
     checkbox.addEventListener('click', checkOrUncheckCheckbox);
     buttonDelete.addEventListener('click', removeTodoItem);
-    todoItemContainer.addEventListener('dragstart', () => {
-      todoItemContainer.setAttribute('data-dragging', '');
-    });
-    todoItemContainer.addEventListener('dragend', () => {
-      todoItemContainer.removeAttribute('data-dragging');
-    });
-    // todoItemContainer.addEventListener('touchstart', onTouchStart);
-    todoItemContainer.addEventListener('touchmove', onTouchMove);
-    todoItemContainer.addEventListener('touchend', onTouchEnd);
 
     // Putting all todo item elements in their respective container
     todoItemContainer.append(checkbox, label, buttonDelete);
@@ -127,12 +122,12 @@
     previousTodoItemsFiltered.forEach(todoItem => {
       todoItem.classList.remove('hero-item-container--hide');
     });
-    // If the parameter value is "falsy", return;
-    if (!currentTodoItemsFiltered) return;
-
-    currentTodoItemsFiltered.forEach(todoItem => {
-      todoItem.classList.add('hero-item-container--hide');
-    });
+    // If the parameter value is "falsy" (!= null), this will be executed
+    if (currentTodoItemsFiltered) {
+      currentTodoItemsFiltered.forEach(todoItem => {
+        todoItem.classList.add('hero-item-container--hide');
+      });
+    }
   }
 
   // Will remove class and attribute from the previous filter button, and add to the current filter button
@@ -197,47 +192,6 @@
   }
 
   // Every time an todo item is dragged by the user, this function will select all todo items except the current dragging todo item, and then calculate the correct position to place the todo item container
-  function getDropElementLocation(positionY) {
-    const draggableTodoItems = [...todoList.querySelectorAll('.hero-item-container:not([data-dragging])')];
-
-    return draggableTodoItems.reduce(
-      (closestTodoItem, todoItem) => {
-        const boxBounding = todoItem.getBoundingClientRect();
-        const offset = positionY - boxBounding.top - boxBounding.height / 2;
-
-        if (offset < 0 && offset > closestTodoItem.offset) {
-          return { offset: offset, element: todoItem };
-        } else {
-          return closestTodoItem;
-        }
-      },
-      { offset: Number.NEGATIVE_INFINITY }
-    ).element;
-  }
-
-  function onTouchMove(event) {
-    event.preventDefault();
-    dragInfo.isMoving = true;
-    event.currentTarget.setAttribute('data-dragging', '');
-
-    const positionY = event.touches[0].clientY;
-    dragInfo.dropElementLocation = getDropElementLocation(positionY);
-  }
-
-  function onTouchEnd() {
-    if (dragInfo.isMoving) {
-      dragInfo.isMoving = false;
-      const todoItemDraggable = document.querySelector('[data-dragging]');
-
-      if (dragInfo.dropElementLocation == null) {
-        todoList.appendChild(todoItemDraggable);
-      } else {
-        todoList.insertBefore(todoItemDraggable, dragInfo.dropElementLocation);
-      }
-
-      todoItemDraggable.removeAttribute('data-dragging');
-    }
-  }
 
   // Event Listener for the Todo Form
   todoForm.addEventListener('submit', e => {
@@ -277,18 +231,4 @@
 
   // Event Listener for the Theme Toggle Button
   buttonThemeToggle.addEventListener('click', changeCurrentTheme);
-
-  // Event Listener for the Todo List (Drag and Drop) with MOUSE
-  todoList.addEventListener('dragover', e => {
-    e.preventDefault();
-
-    const dropElementLocation = getDropElementLocation(e.clientY);
-    const todoItemDraggable = document.querySelector('[data-dragging]');
-
-    if (dropElementLocation == null) {
-      todoList.appendChild(todoItemDraggable);
-    } else {
-      todoList.insertBefore(todoItemDraggable, dropElementLocation);
-    }
-  });
 })();
