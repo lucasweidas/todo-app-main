@@ -16,7 +16,7 @@
   const buttonLockUnlock = document.querySelector('#btn__lock-unlock');
   // Creating an object of the "Sortable" Framework, which will take care of the drag and drop functionality
   const sortable = new Sortable(todoList, {
-    delay: 80,
+    delay: 200,
     delayOnTouchOnly: true,
     animation: 200,
     ghostClass: 'blue-background-class',
