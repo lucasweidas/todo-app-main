@@ -358,8 +358,9 @@ body.light-theme .hero-shadow {
 }
 
 .blue-background-class {
-  /* background-color: var(--checkbox-border-color); */
   background-color: var(--dragging-background);
+  border-left: 1px solid var(--clr-bright-blue);
+  border-right: 1px solid var(--clr-bright-blue);
 }
 
 .sortable-drag {
