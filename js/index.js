@@ -98,7 +98,6 @@
     const itemsLeft = todoItemContainers.length;
 
     itemsLeftCounter.innerText = `${itemsLeft} item${itemsLeft === 1 ? '' : 's'} left`;
-    itemsLeftCounter.ariaLabel = `${itemsLeft} item${itemsLeft === 1 ? '' : 's'} left`;
   }
 
   // Remove ONE todo item from the list when the user clicks the delete button inside the todo item container
