@@ -21,7 +21,7 @@
     animation: 200,
     ghostClass: 'blue-background-class',
     dragClass: 'sortable-drag',
-    onEnd: function () {
+    onEnd: () => {
       setTodoItemLocalStorage();
     },
   });
