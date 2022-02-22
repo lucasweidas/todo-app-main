@@ -241,9 +241,11 @@
 
     if (lightMode === 'true') changeCurrentTheme();
 
-    todoItems.forEach(todoItem => {
-      createNewTodo(todoItem.text, todoItem.status, true);
-    });
+    if (todoItems !== null) {
+      todoItems.forEach(todoItem => {
+        createNewTodo(todoItem.text, todoItem.status, true);
+      });
+    }
   }
 
   // Event Listener for the Todo Form
