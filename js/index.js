@@ -21,8 +21,12 @@
     animation: 200,
     ghostClass: 'blue-background-class',
     dragClass: 'sortable-drag',
+    onEnd: function () {
+      setTodoItemLocalStorage();
+    },
   });
 
+  getLocalStorageData();
   setItemsLeftCounter();
 
   // Check if the user submitted an empty value
@@ -32,7 +36,7 @@
   }
 
   // Every time a new valid todo item is submitted, it will create new elements, configure and call up all necessary functions, and show it on the screen
-  function createNewTodo(value, status) {
+  function createNewTodo(value, status, onload = false) {
     // Creating all the new todo item elements
     const todoItemContainer = document.createElement('div');
     const checkbox = document.createElement('input');
@@ -66,6 +70,7 @@
     reorderCheckBoxesId();
     setItemsLeftCounter();
     updateDisplayedItems();
+    if (onload === false) setTodoItemLocalStorage();
   }
 
   // Will check or uncheck the input checkbox
@@ -78,6 +83,7 @@
 
     setItemsLeftCounter();
     updateDisplayedItems();
+    setTodoItemLocalStorage();
   }
 
   // Every time a new todo item is created, it will reorder the ids for all checkboxes inside a "Todo item container"
@@ -107,6 +113,7 @@
     todoList.removeChild(todoItemContainer);
     reorderCheckBoxesId();
     setItemsLeftCounter();
+    setTodoItemLocalStorage();
   }
 
   // Remove ALL todo items check as completed from the list, when the user clicks the delete completed button
@@ -115,6 +122,7 @@
 
     completedTodoItems.forEach(todoItem => todoList.removeChild(todoItem));
     reorderCheckBoxesId();
+    setTodoItemLocalStorage();
   }
 
   // Will remove the class that was hidden from the previous todo items, and then add this same class to the current filtered todo items
@@ -181,10 +189,12 @@
   function changeCurrentTheme() {
     const body = document.body;
     const backgroundImageContainer = document.querySelector('#background-img');
+    const lightMode = !body.classList.contains('light-theme');
 
     body.classList.toggle('light-theme');
     backgroundImageContainer.classList.toggle('light-theme');
     themeIcons.forEach(icon => icon.classList.toggle('active-theme'));
+    localStorage.setItem('lightMode', lightMode);
 
     const isLightModeOn = body.classList.contains('light-theme');
     if (isLightModeOn) {
@@ -208,6 +218,32 @@
     }
     buttonLockUnlock.ariaLabel = 'Click to enable the drag and drop function';
     buttonLockUnlock.title = 'enable drag and drop';
+  }
+
+  function setTodoItemLocalStorage() {
+    const todoItems = [...todoList.querySelectorAll('.hero-item-container')];
+    const storageValue = todoItems.reduce((result, todoItem) => {
+      const checkbox = todoItem.querySelector('[data-item-cb]');
+      const label = todoItem.querySelector('[data-item-lbl]');
+      const status = checkbox.checked;
+      const text = label.innerText;
+
+      result.push({ text: text, status: status });
+      return result;
+    }, []);
+
+    localStorage.setItem('todoItems', JSON.stringify(storageValue));
+  }
+
+  function getLocalStorageData() {
+    const lightMode = localStorage.getItem('lightMode');
+    const todoItems = JSON.parse(localStorage.getItem('todoItems'));
+
+    if (lightMode === 'true') changeCurrentTheme();
+
+    todoItems.forEach(todoItem => {
+      createNewTodo(todoItem.text, todoItem.status, true);
+    });
   }
 
   // Event Listener for the Todo Form
